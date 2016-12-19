@@ -1,5 +1,7 @@
 # AsyncOS
 
+[![Join the chat at https://gitter.im/AsyncOS/Lobby](https://badges.gitter.im/AsyncOS/Lobby.svg)](https://gitter.im/AsyncOS/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is the repository for AsyncOS, a small hobbyist operating system which is largely unique in it's attempt at being
 as asyncronous as possible - nearly all system calls are non-blocking, and communication between user processes and the
 kernel is handled through event polling (as well as communication between kernel modules); this typically devolves into
