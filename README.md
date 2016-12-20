@@ -60,7 +60,7 @@ make [build]
 Running with qemu is
 
 ```
-make run [kvm=true|false]
+make run [KVM=true|false]
 ```
 
-Note that KVM is on by default; as the above implies, you can disable it by `kvm=false`.
+Note that KVM is on by default; as the above implies, you can disable it by `KVM=false`.
