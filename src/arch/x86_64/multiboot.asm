@@ -4,6 +4,7 @@
 %define MULTIBOOT_LENGTH (multiboot_end - multiboot_start)
 
 section .multiboot
+bits 32
 multiboot_start:
     dd MULTIBOOT_MAGIC ; Required multiboot 2 magic number
     dd MULTIBOOT_ARCH ; Specifies we want architecture i386
