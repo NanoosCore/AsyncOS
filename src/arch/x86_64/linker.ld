@@ -27,8 +27,6 @@ SECTIONS {
 	.bootstrap : { bin/x86_64/bootstrap.o (.text .data .rodata .bss) }
 
 	/* After this, we load the kernel proper, which is way up there in virtual memory. */
-	/* As you'll see, we actually load at virtual + physical; this is because we just map
-	virtual -> 0x0 due to using huge (1 GB or 2 MB) pages. */
 	. = KERNEL_VIRTUAL;
 
 	/* Followed by the kernel source. */
