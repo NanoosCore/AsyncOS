@@ -30,3 +30,10 @@ The bootstrapping process takes off from when multiboot hands over control to us
      (creating the virtual mapping to the 1st gigabyte of physical memory).
 3. Switch to the extended 32-bit mode, and then set up the 64-bit GDT/IDT which gives us just enough to long-jump into 64-bit mode.
 4. Hand off control to the kernel proper, which can then set up nicer and more permanent mappings and install it's own data tables/structures.
+
+When the bootstrap code is done, we guaruntee the following things:
+
+- Low physical memory is identity mapped, so we can access the multiboot metadata.
+- High virtual memory is mapped, so the kernel can operate normally.
+- We're in long mode with a tempory GDT and proper segment registers.
+- Any appropriate paging flags have been set in the proper control registers (I'll expand on which ones we enable as this changes).
