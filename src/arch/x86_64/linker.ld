@@ -14,14 +14,14 @@ KERNEL_PHYSICAL = 0x100000;
 which gives us 4GB for the kernel proper. */
 /* The other memory regions, like 0xE0010..0 - 0xEEEEFF...F and so on are used for the kernel heap and
 physical memory mappings */
-KERNEL_VIRTUAL = 0xE00000100000;
+KERNEL_VIRTUAL = 0xFFFFE00000100000;
 
 SECTIONS {
     /* Start emitting the multiboot info and bootstrap info immediately. */
     . = BOOTSTRAP_PHYSICAL;
 
 	/* The multiboot section comes first and MUST not be auto-removed. */
-	.multiboot : { bin/x86_64/multiboot.o (.multiboot) }
+	.multiboot : { KEEP(bin/x86_64/multiboot.o (.multiboot)) }
 
 	/* Next comes the bootstrap section, which is our 16bit -> 32bit -> 64bit code. */
 	.bootstrap : { bin/x86_64/bootstrap.o (.text .data .rodata .bss) }

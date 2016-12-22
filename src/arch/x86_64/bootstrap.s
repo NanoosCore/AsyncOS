@@ -236,10 +236,16 @@ init_stack_top:
 ; EVERYTHING BELOW IS 64-bit code.
 ; ===============================
 
-
-bits 64
 section .text
+bits 64
+
+extern rust_init
+
+global asm_init64
 asm_init64:
-    mov rax, 0x2f592f412f4b2f4f
-    mov qword [0xb8000], rax
+    ; Go into rust land.
+    mov rax, rust_init
+    call rax
+
+	; If we return, we'll just halt. We shouldn't return, of course.
     hlt

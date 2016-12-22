@@ -1,0 +1,21 @@
+[package]
+name = "async_os"
+version = "0.0.1"
+authors = [
+    "Michael Brenan <blacksmithgu@gmail.com>",
+    "Miguel Obregon <miguel.j.obregon@gmail.com>",
+    "Souvik Banerjee <souvik@souvik.me>"
+]
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+rlibc = "1.0.0"
+
+# We don't have good panic support for now, so aborts it is.
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
