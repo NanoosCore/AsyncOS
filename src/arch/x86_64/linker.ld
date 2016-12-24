@@ -31,22 +31,28 @@ SECTIONS {
 
 	/* Followed by the kernel source. */
 	.text : AT(ADDR(.text) - KERNEL_VIRTUAL + KERNEL_PHYSICAL) { 
-		*(.text)
+		*(.text .text.*)
 		*(EXCLUDE_FILE(bin/x86_64/bootstrap.o bin/x86_64/multiboot.o) .text)
 		. = ALIGN(4096);
 	}
 
 	/* Followed by all the other sections, like data, bss, etc... */
 	.data : AT(ADDR(.data) - KERNEL_VIRTUAL + KERNEL_PHYSICAL) {
-		*(.data)
-		*(.rodata)
+		*(.data .data.*)
+		*(.rodata .rodata.*)
 		*(EXCLUDE_FILE(bin/x86_64/bootstrap.o bin/x86_64/multiboot.o) .data .rodata)
 		. = ALIGN(4096);
 	}
 
+	.gcc_except_table : AT(ADDR(.gcc_except_table) - KERNEL_VIRTUAL + KERNEL_PHYSICAL) {
+		*(.gcc_except_table .gcc_except_table.*)
+		. = ALIGN(4096);
+	}
+
 	.bss : AT(ADDR(.bss) - KERNEL_VIRTUAL + KERNEL_PHYSICAL) {
-		*(.bss)
+		*(.bss .bss.*)
 		*(EXCLUDE_FILE(bin/x86_64/bootstrap.o bin/x86_64/multiboot.o) .bss)
 		. = ALIGN(4096);
 	}
 }
+

@@ -2,11 +2,11 @@
 ; This bootstrapper identity maps the first gigabyte and furthermore maps the 1st gigabyte after the KERNEL_VIRTUAL
 ; address to the first gigabyte as well.
 
-%define INIT_STACK_SIZE 64
+%define INIT_STACK_SIZE 1024
 
 ; TODO: This is redefined in linker.ld (well, it almost is - this is the start of where to map, not where to
 ; load the kernel; here, this needs to be 512-gb aligned)
-KERNEL_VIRTUAL equ 0xE00000000000
+KERNEL_VIRTUAL equ 0xFFFFE00000100000
 
 section .text
 bits 32
@@ -26,14 +26,16 @@ asm_init32:
     call check_multiboot
     call check_cpuid
     call check_long_mode
+    call check_sse
 
-    ; If all the checks succeed, we can switch to long mode.
+    ; If all the checks succeed, we can switch to long mode and enable some other flags we need.
     ; This requires setting several bits in cr0/cr4, and setting up initial page tables.
     ; Note that our loader puts the kernel (in virtual memory) at 0xE000..., so we should set up the page tables
     ; to point from 0xE0000... -> 0x100000 (1 megabyte)
     ; as well as an identity map of the bootstrap code.
     call setup_page_tables
     call enable_paging
+    call enable_sse
 
     ; After this, we're in 64-bit paging, but 32-bit "compatibility" mode. How annoying!
     ; So we load the 64-bit GDT.
@@ -124,9 +126,34 @@ check_long_mode:
     mov al, "2"
     jmp print_error
 
+; Check to see if SSE is a feature of this CPU.
+check_sse:
+    mov eax, 0x1
+    cpuid
+    test edx, 1<<25
+    jz .no_sse
+
+    ret
+.no_sse:
+    mov al, "a"
+    jmp print_error
+
+; Enable SSE.
+enable_sse:
+    mov eax, cr0
+    and ax, 0xFFFB      ; clear coprocessor emulation CR0.EM
+    or ax, 0x2          ; set coprocessor monitoring  CR0.MP
+
+    mov cr0, eax
+    mov eax, cr4
+    or ax, 3 << 9       ; set CR4.OSFXSR and CR4.OSXMMEXCPT at the same time
+    mov cr4, eax
+
+    ret
+
 ; This code assumes that the virtual target address is aligned to 
-; 512GB-boundaries or is within 1 GB of said boundaries, for now. We can make this nicer, or make a rust bootloader which does
-; all this for us.
+; 512GB-boundaries or is within 1 GB of said boundaries, for now. 
+; We can make this nicer, or make a rust bootloader which does all this for us.
 setup_page_tables:
     ; Set up the p2 table.
     call setup_page_tables_p2
@@ -243,6 +270,9 @@ extern rust_init
 
 global asm_init64
 asm_init64:
+    ; I think we pass the 1st integer/ptr argument in rdi for System V? I hope.
+    mov rdi, rbx
+
     ; Go into rust land.
     mov rax, rust_init
     call rax

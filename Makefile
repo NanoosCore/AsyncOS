@@ -44,10 +44,17 @@ clean:
 	rm -rf $(BIN_ROOT)
 
 run: image
-ifeq ($(KVM),true)
-	qemu-system-x86_64 -enable-kvm -cdrom $(KERNEL_IMAGE)
+ifeq ($(KVM), true)
+	qemu-system-x86_64 -enable-kvm -cdrom $(KERNEL_IMAGE) --serial mon:stdio
 else
-	qemu-system-x86_64 -cdrom $(KERNEL_IMAGE)
+	qemu-system-x86_64 -cdrom $(KERNEL_IMAGE) --serial mon:stdio
+endif
+
+debug: image
+ifeq ($(KVM), true)
+	qemu-system-x86_64 -s -enable-kvm -cdrom $(KERNEL_IMAGE) --serial mon:stdio
+else
+	qemu-system-x86_64 -s -cdrom $(KERNEL_IMAGE) --serial mon:stdio
 endif
 
 # Definitions of actual build rules.
