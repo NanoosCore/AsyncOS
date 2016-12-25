@@ -2,6 +2,8 @@
 #![feature(step_by)]
 #![feature(unique)]
 #![feature(const_fn)]
+#![feature(conservative_impl_trait)]
+#![feature(asm)]
 #![no_std]
 
 extern crate rlibc;
@@ -32,12 +34,20 @@ pub extern "C" fn rust_init(multiboot_header: *mut u8) {
 
             println!("\t- {} @ {1:x}", str::from_utf8(&header.signature).unwrap(), table as u64);
         }
+
+        if let Some(madt) = unsafe { acpi.find_table::<acpi::MADT>() } {
+            println!("- MADT: {} processors available", madt.processors().count());
+
+            for entry in madt.processors() {
+                println!("\t- {:?}", entry);
+            }
+        }
     } else {
         color_println!(vga::Color::Red, "- ACPI: Absent");
     }
 
     // The OS HAS CONTROL NOW. No premature exiting for us.
-    loop { }
+    loop { unsafe { asm!("hlt" :::: "volatile"); } }
 }
 
 /// Method used for the compilers personality, though I'm not sure what it is.

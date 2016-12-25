@@ -4,10 +4,16 @@
 //! the ever useful OSDev Wiki and the most recent version of the ACPI standard, which
 //! is managed by (and can be found on the website of) the UEFI committee.
 
-mod tables;
+mod table;
+mod rsdp;
+mod rsdt;
+mod madt;
 
 // We do use all of the structs here and other people probably will too, so may as well import.
-pub use self::tables::*;
+pub use self::table::*;
+pub use self::rsdp::*;
+pub use self::rsdt::*;
+pub use self::madt::*;
 
 /// Represents a handle into all of the ACPI data structures, and eases
 /// information retrieval.
