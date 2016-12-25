@@ -14,7 +14,8 @@ pub struct MADT {
     /// The header of this ACPI table.
     header: SDTHeader,
 
-    /// The address of the local controller, eg, LAPIC. TODO Expand on what this is.
+    /// The address of the local controller, eg, LAPIC. Every CPU can access this same address, but it is
+    /// mapped to each CPUs _local_ controller.
     pub controller_address: u32,
 
     /// Extra flags detailing any particular features of the hardware.
@@ -45,7 +46,7 @@ impl MADT {
         MADTEntryIterator { location: entries_start, end: table_end }
     }
 
-    /// Retuurn an iterator over all of the processors in the MADT table.
+    /// Return an iterator over all of the processors in the MADT table.
     pub fn processors(&self) -> impl Iterator<Item=Processor> {
         self.entries().filter_map(|entry| {
             match entry {
@@ -216,6 +217,7 @@ enum MADTEntryType {
     /// global system interrupt controllers. (TODO: Double check this one.)
     InterruptSourceOverride,
 
+    /// An unknown MADT entry, eg, one which this library doesn't know how to parse.
     Unknown
 }
 
