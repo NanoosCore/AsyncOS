@@ -50,6 +50,12 @@ http://os.phil-opp.com/.
 
 # Build Instructions
 
+You need to have `nasm`, `grub-mkrescue`, `xorriso`, `qemu`, nightly rust
+optimally through [rustup], and [xargo] installed.
+
+[rustup]: https://www.rustup.rs/
+[xargo]: https://github.com/japaric/xargo
+
 For the short forseeable future, until we have a chance to set up everything to use either the Rust build tool or
 another, less esoteric build tool, we use Make (but absolutely no recursive make!). Building is just
 

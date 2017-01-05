@@ -26,7 +26,6 @@ asm_init32:
     call check_multiboot
     call check_cpuid
     call check_long_mode
-    call check_sse
 
     ; If all the checks succeed, we can switch to long mode and enable some other flags we need.
     ; This requires setting several bits in cr0/cr4, and setting up initial page tables.
@@ -35,7 +34,6 @@ asm_init32:
     ; as well as an identity map of the bootstrap code.
     call setup_page_tables
     call enable_paging
-    call enable_sse
 
     ; After this, we're in 64-bit paging, but 32-bit "compatibility" mode. How annoying!
     ; So we load the 64-bit GDT.
@@ -125,31 +123,6 @@ check_long_mode:
 .no_long_mode:
     mov al, "2"
     jmp print_error
-
-; Check to see if SSE is a feature of this CPU.
-check_sse:
-    mov eax, 0x1
-    cpuid
-    test edx, 1<<25
-    jz .no_sse
-
-    ret
-.no_sse:
-    mov al, "a"
-    jmp print_error
-
-; Enable SSE.
-enable_sse:
-    mov eax, cr0
-    and ax, 0xFFFB      ; clear coprocessor emulation CR0.EM
-    or ax, 0x2          ; set coprocessor monitoring  CR0.MP
-
-    mov cr0, eax
-    mov eax, cr4
-    or ax, 3 << 9       ; set CR4.OSFXSR and CR4.OSXMMEXCPT at the same time
-    mov cr4, eax
-
-    ret
 
 ; This code assumes that the virtual target address is aligned to 
 ; 512GB-boundaries or is within 1 GB of said boundaries, for now. 

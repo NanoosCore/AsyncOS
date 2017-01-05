@@ -5,7 +5,7 @@ NAME := asyncos
 
 # Specifies the default architecture to build (if not otherwise specified).
 ARCH ?= x86_64
-TARGET ?= $(ARCH)-unknown-linux-gnu
+TARGET ?= $(ARCH)-async_os
 
 # Specify standard build paths.
 SRC := src
@@ -41,6 +41,7 @@ build: $(KERNEL_BINARY)
 image: $(KERNEL_IMAGE)
 
 clean:
+	cargo clean
 	rm -rf $(BIN_ROOT)
 
 run: image
@@ -64,7 +65,7 @@ $(ASM_OFILES) : $(BIN)/%.o : $(ASM_SRC)/%.s
 	nasm -f elf64 $< -o $@
 
 $(KERNEL_OBJECT): .FORCE
-	cargo build --target $(TARGET)
+	xargo build --target $(TARGET)
 
 $(KERNEL_BINARY) : $(ASM_OFILES) $(KERNEL_OBJECT) $(LINKER_SCRIPT) 
 	mkdir -p $(shell dirname $(KERNEL_BINARY))
