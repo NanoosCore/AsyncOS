@@ -9,6 +9,13 @@
 KERNEL_VIRTUAL equ 0xFFFFE00000100000
 
 section .text
+bits 16
+
+; The 16-bit entry point for SMP processors which are being awoken by the original processor.
+asm_init16:
+    hlt
+
+section .text
 bits 32
 
 ; The 32-bit entry point for the initial processor; multiboot passes off control to this.

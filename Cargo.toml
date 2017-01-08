@@ -15,6 +15,7 @@ rlibc = "1.0.0" # Provides memcpy, memset, etc.
 spin = "0.4.5" # Provides spinlock-based synchronization primitives
 volatile = "0.2.1" # Provides a volatile wrapper type to prevent compiler optimizations from eliminating memory writes.
 multiboot2 = "0.3.1" # Provides structs for parsing multiboot2 information.
+bit_field = "0.6.0" # Provides methods for getting/setting specific ranges of bits in integral types. Highly useful!
 
 # We don't have good panic support for now, so aborts it is.
 [profile.dev]

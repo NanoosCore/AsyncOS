@@ -40,6 +40,7 @@ impl ACPI {
                     // Version 2 means we're actually dealing with an XSDP.
                     let xptr = ptr as *mut XSDP;
 
+                    // That's some zany pointer wrangling we should split out into 2/3 lines.
                     Some(ACPI::Version2(&*((*xptr).address as *const XSDT)))
                 },
                 _ => None

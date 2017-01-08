@@ -2,11 +2,17 @@
 name = "async_os"
 version = "0.0.1"
 dependencies = [
+ "bit_field 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "multiboot2 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "rlibc 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "spin 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "volatile 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "bit_field"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "bitflags"
@@ -37,6 +43,7 @@ version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [metadata]
+"checksum bit_field 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)" = "38cd044473d684f0faae8469c213a7c707c5ddabacf575fe91bd878ed3712ffa"
 "checksum bitflags 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8dead7461c1127cf637931a1e50934eb6eee8bff2f74433ac7909e9afcee04a3"
 "checksum multiboot2 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)" = "88aedb52b616203e987bf9cd0c2779e281eefcfa23bd23dc9734f2dcf54079ad"
 "checksum rlibc 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "fc874b127765f014d792f16763a81245ab80500e2ad921ed4ee9e82481ee08fe"

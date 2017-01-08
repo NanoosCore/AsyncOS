@@ -124,9 +124,7 @@ impl Iterator for MADTEntryIterator {
                     flags: iso.flags
                 }))
             },
-            _ => {
-                Some(MADTEntry::Unknown)
-            }
+            _ => Some(MADTEntry::Unknown)
         };
 
         self.location = unsafe { self.location.offset((*header_ptr).length as isize) };
@@ -147,7 +145,7 @@ pub enum MADTEntry {
     /// An Interrupt Source Override entry describing, well... that.
     InterruptSourceOverride(InterruptSourceOverride),
 
-    /// An unknown MADT entry which we cannot parse.
+    /// An unknown MADT entry which we cannot (or don't know how to) parse.
     Unknown
 }
 
@@ -202,6 +200,10 @@ pub struct InterruptSourceOverride {
     /// An extra flags describing the interrupt source.
     flags: u16
 }
+
+
+
+// Note: Everything that follows is dirtier, C-like structs which map to the direct memory representation.
 
 /// An enumeration of the possible types of entries in the MADT.
 #[allow(dead_code)]

@@ -10,13 +10,19 @@ extern crate rlibc;
 extern crate spin;
 extern crate volatile;
 extern crate multiboot2;
+extern crate bit_field;
 
 pub mod acpi;
+pub mod processor;
+pub mod memory;
 
 #[macro_use]
 pub mod vga;
 
 use core::str;
+
+use acpi::SystemTable;
+use processor::LAPIC;
 
 /// The rust entry point for the initial processor into the kernel.
 #[no_mangle]
@@ -32,15 +38,21 @@ pub extern "C" fn rust_init(multiboot_header: *mut u8) {
         for table in acpi.raw_tables() {
             let header = unsafe { &*table };
 
-            println!("\t- {} @ {1:x}", str::from_utf8(&header.signature).unwrap(), table as u64);
+            println!("\t- {} @ {:x}", str::from_utf8(&header.signature).unwrap(), table as u64);
         }
 
         if let Some(madt) = unsafe { acpi.find_table::<acpi::MADT>() } {
-            println!("- MADT: {} processors available", madt.processors().count());
+            println!("- MADT: {} processors available, {} checksum", madt.processors().count(), madt.verify_checksum());
 
             for entry in madt.processors() {
                 println!("\t- {:?}", entry);
             }
+
+            println!("- MADT: Local APIC at {:x}", madt.controller_address);
+
+            let lapic = LAPIC::from_address(madt.controller_address as u64);
+
+            println!("- This processor's ID is {}", lapic.id());
         }
     } else {
         color_println!(vga::Color::Red, "- ACPI: Absent");
